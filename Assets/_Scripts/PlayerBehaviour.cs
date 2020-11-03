@@ -11,12 +11,18 @@ public class PlayerBehaviour : MonoBehaviour
     public float jumpForce;
     public float maxSpeedX;
 
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb2d;
     // Start is called before the first frame update
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
         Assert.IsNotNull(rb2d);
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        Assert.IsNotNull(spriteRenderer);
+        animator = GetComponent<Animator>();
+        Assert.IsNotNull(animator);
     }
 
     // Update is called once per frame
@@ -31,15 +37,21 @@ public class PlayerBehaviour : MonoBehaviour
         {
             //Right
             rb2d.AddForce(Vector2.right * horizontalForce * Time.deltaTime);
+            spriteRenderer.flipX = false;
+            animator.SetInteger("AnimState", 1);
             Debug.Log("Move Right");
         }
-
-        if (joystick.Horizontal < -joystickSensitivity)
+        else if (joystick.Horizontal < -joystickSensitivity)
         {
             //Left
             rb2d.AddForce(Vector2.left * horizontalForce * Time.deltaTime);
+            spriteRenderer.flipX = true;
+            animator.SetInteger("AnimState", 1);
             Debug.Log("Move Left");
         }
-
+        else
+        {
+            animator.SetInteger("AnimState", 0);
+        }
     }
 }
